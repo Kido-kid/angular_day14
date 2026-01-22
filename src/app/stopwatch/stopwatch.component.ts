@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { fromEvent, interval, map, switchMap, takeUntil, startWith, Subject, merge, scan } from 'rxjs';
+import { fromEvent, interval, map, switchMap, takeUntil, startWith, Subject, merge } from 'rxjs';
 
 @Component({
   selector: 'app-stopwatch',
@@ -15,15 +15,15 @@ export class StopwatchComponent implements AfterViewInit {
 
   private stop$ = new Subject<void>();
   private reset$ = new Subject<void>();
+  private elapsed = 0; // total time accumulated
 
   ngAfterViewInit(): void {
     const start$ = fromEvent(this.startBtn.nativeElement, 'click').pipe(
       switchMap(() =>
         interval(1000).pipe(
-          // accumulate seconds
-          scan((acc) => acc + 1, 0),
+          map(i => this.elapsed + i + 1), // continue from elapsed
           takeUntil(merge(this.stop$, this.reset$)),
-          startWith(0)
+          startWith(this.elapsed) // show immediately
         )
       )
     );
@@ -34,10 +34,14 @@ export class StopwatchComponent implements AfterViewInit {
 
     fromEvent(this.stopBtn.nativeElement, 'click').subscribe(() => {
       this.stop$.next();
+      // save the current displayed value as elapsed
+      const current = Number(this.display.nativeElement.textContent?.replace('s','')) || 0;
+      this.elapsed = current;
     });
 
     fromEvent(this.resetBtn.nativeElement, 'click').subscribe(() => {
       this.reset$.next();
+      this.elapsed = 0;
       this.display.nativeElement.textContent = `0s`;
     });
   }
