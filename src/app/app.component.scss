@@ -1,0 +1,41 @@
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #2c3e50;
+  padding: 1rem;
+  border-bottom: 3px solid #4a90e2;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+  h2 {
+    color: #ecf0f1;
+    margin: 0 0 0.75rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+
+    a {
+      color: #ecf0f1;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background 0.2s ease, color 0.2s ease;
+
+      &:hover {
+        background: #4a90e2;
+        color: #fff;
+      }
+
+      &.active {
+        background: #3498db;
+        color: #fff;
+      }
+    }
+  }
+}
